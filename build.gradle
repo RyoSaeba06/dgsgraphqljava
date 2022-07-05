@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "com.netflix.dgs.codegen" version "5.1.17" // DGS Code Gen
+}
+
+group = 'com.example.scerri'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	DGS
+	implementation(platform('com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release'))
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter'
+//	Faker
+	implementation 'net.datafaker:datafaker:1.4.0'
+//	Lombok
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+generateJava{
+	schemaPaths = ["${projectDir}/src/main/resources/schema"] // List of directories containing schema files
+	packageName = 'com.example.scerri.graphqljava.generated' // The package name to use to generate sources
+	generateClient = true // Enable generating the type safe query API
+}

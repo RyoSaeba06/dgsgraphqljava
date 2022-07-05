@@ -1,0 +1,14 @@
+type Query {
+    users(userNameFilter: String): [User]
+}
+
+type User {
+    id: Int
+    firstName: String
+    lastName: String
+    details: HRInfo
+}
+
+type HRInfo {
+    salary: Int
+}
