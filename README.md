@@ -108,7 +108,7 @@ To run keycloak, go in the project directory and run :
 
 ![grahql test](/readme/graphiql.gif)
 
- * Try with : 
+ Try with : 
 
 
     {
@@ -126,9 +126,19 @@ To run keycloak, go in the project directory and run :
 
 ![permission denied](/readme/denied.png)
 
- * In the DataFetcher you have:
+  Permission is handled by the **@Secured** annotation in the HRInfoDataFetcher class:
 
 
     @Secured("ROLE_USER_VIEWER")
     @DgsData(parentType = DgsConstants.USER.TYPE_NAME)
     public CompletableFuture<HRInfo> details(DgsDataFetchingEnvironment dfe) 
+
+To access datas first you need to get the access token. 
+> :bulb: You can use the postman collection file in main folder : Keycloak.getToken.json
+
+Copy the access_token and set the Authorization header.
+
+![Et Voila](/readme/secured.gif)
+
+## Next (Maybe)
+ * Mutation, Directive, Subscription
