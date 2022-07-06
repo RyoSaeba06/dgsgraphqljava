@@ -45,6 +45,12 @@ I want to have a part of information secured:
 So this is a basic configuration for an OAuth2 resource server.
 #### Class SecurityConfiguration
 
+    @EnableGlobalMethodSecurity(
+            prePostEnabled = true,
+            securedEnabled = true)
+
+To activate **@Secured** we set the **securedEnabled** property.
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -69,5 +75,60 @@ I've also created a REST Controller in order to check my JWT : <mark>/rest/test<
 To run keycloak, go in the project directory and run : 
 `docker-compose up`
 ![docker](/readme/dockerg.gif)
+### Configure Keycloak
+* Go to http://localhost:8081, and click on Admin console
+* Enter username and password: **admin**
+* You should be logged as admin, in the master realm
+#### Import demo realm settings
+
+![New Realm](/readme/keycloak.gif)
+
+* Create new real, and import file : realm-export.json
+* The Demo real is now created
+* graphqlapi client created 
+
+![grahqlclient](/readme/client.png)
+* roles USER_ADMIN and USER_VIEWER are created
+
+![grahqlclient](/readme/roles.png)
+
+#### Create 2 users
+
+![User creation](/readme/user.gif)
+
+* Users > Add User
+* Set the username
+* Set the password
+* Add a different role for each user (ex: superman is USER_ADMIN, batman is USER-VIEWER)
+
+## Run and test
+ * Start the app. you can do `./gradlew bootRun`
+ * Once the app is started. Go to : http://localhost:8080/graphiql
+ * Test the public access
+
+![grahql test](/readme/graphiql.gif)
+
+ * Try with : 
 
 
+    {
+        users {
+            id
+            firstName
+            lastName
+            details {
+                salary
+            }
+        }
+    }
+
+ * you should get : 
+
+![permission denied](/readme/denied.png)
+
+ * In the DataFetcher you have:
+
+
+    @Secured("ROLE_USER_VIEWER")
+    @DgsData(parentType = DgsConstants.USER.TYPE_NAME)
+    public CompletableFuture<HRInfo> details(DgsDataFetchingEnvironment dfe) 
